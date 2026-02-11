@@ -16,14 +16,23 @@ connectCloudinary()
 // middlewares
 app.use(express.json())
 app.use(cors({
-  origin: [
-    'https://prescripto-sepia-five.vercel.app',
-    'https://prescripto-2a5y.vercel.app'
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://prescripto-sepia-five.vercel.app',
+      'https://prescripto-2a5y.vercel.app'
+    ]
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true)
+    // Allow any vercel.app preview URL for your projects
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      return callback(null, true)
+    }
+    return callback(new Error('Not allowed by CORS'))
+  },
   credentials: true
 }))
 
-
+// api endpoints
 app.use("/api/user", userRouter)
 app.use("/api/admin", adminRouter)
 app.use("/api/doctor", doctorRouter)
