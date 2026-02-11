@@ -15,9 +15,15 @@ connectCloudinary()
 
 // middlewares
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: [
+    'https://prescripto-sepia-five.vercel.app',
+    'https://prescripto-2a5y.vercel.app'
+  ],
+  credentials: true
+}))
 
-// api endpoints
+
 app.use("/api/user", userRouter)
 app.use("/api/admin", adminRouter)
 app.use("/api/doctor", doctorRouter)
